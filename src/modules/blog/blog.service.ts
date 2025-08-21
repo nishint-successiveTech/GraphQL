@@ -6,7 +6,7 @@ export class BlogService {
     return users;
   }
 
-public static async getAllPosts(): Promise<Post[]> {
+  public static async getAllPosts(): Promise<Post[]> {
     return new Promise((resolve) => {
       setTimeout(() => resolve(posts), 5000);
     });
@@ -14,6 +14,37 @@ public static async getAllPosts(): Promise<Post[]> {
 
   static getAllComments(): Comment[] {
     return comments;
+  }
+
+  public static async getPaginatedPosts(page: number, limit: number,sortOrder:string) {
+
+    let sortedPosts=[...posts];
+
+    //sort
+
+    sortedPosts.sort((a,b)=>{
+      console.log(typeof(sortOrder));
+      if(sortOrder=="ASC"){
+        return a.title.localeCompare(b.title);
+      }
+      else{
+        return b.title.localeCompare(a.title);
+      }
+    })
+
+    //paginations
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const items = sortedPosts.slice(start, end);
+    const totalCount = sortedPosts.length;
+
+    return {
+      items,
+      totalCount,
+      hasNextPage: end < totalCount,
+      hasPrevPage: start > 0,
+    };
   }
 
   //mutations

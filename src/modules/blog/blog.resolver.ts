@@ -6,6 +6,12 @@ export default {
     users: () => BlogService.getAllUsers(),
     posts: () => BlogService.getAllPosts(),
     comments: () => BlogService.getAllComments(),
+    postsPaginated: async (
+      _: unknown,
+      { page, limit,sortOrder}: { page: number; limit: number; sortOrder:string}
+    ) => {
+      return await BlogService.getPaginatedPosts(page, limit,sortOrder);
+    },
   },
 
   Mutation: {

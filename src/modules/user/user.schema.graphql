@@ -3,7 +3,14 @@ type User {
   name: String!
   email: String!
 }
+type UserError {
+  message: String!
+  code: String!
+}
 type Query {
   usersAll: [User!]!
-  userById(id: ID!): User
+  userById(id: ID!): UserResult
 }
+
+
+union UserResult = User | UserError
