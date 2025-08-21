@@ -4,7 +4,9 @@ export interface User {
   email: string;
 }
 
-export const users: User[] = [
-  { id: "1", name: "Amit", email: "amit@example.com" },
-  { id: "2", name: "Neha", email: "neha@example.com" },
+const users: User[] = [
+  { id: "1", name: "Amit1111111", email: "amit@example.com" },
+  { id: "2", name: "Neha222222222", email: "neha@example.com" },
 ];
+
+export default users;

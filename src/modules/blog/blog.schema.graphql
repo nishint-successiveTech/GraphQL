@@ -31,4 +31,6 @@ extend type Mutation {
   createUser(name: String!, email: String!): User!
   createPost(title: String!, content: String!, authorId: ID!): Post!
   createComment(text: String!, authorId: ID!, postId: ID!): Comment!
+  updateUser(id: ID!, name: String, email: String): User!
+  deleteComment(id: ID!): Boolean!
 }

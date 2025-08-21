@@ -3,12 +3,7 @@ type User {
   name: String!
   email: String!
 }
-
-extend type Query {
-  user(id: ID!): User
-  users: [User!]!
-}
-
-extend type Mutation {
-  createUser(name: String!, email: String!): User!
+type Query {
+  usersAll: [User!]!
+  userById(id: ID!): User
 }

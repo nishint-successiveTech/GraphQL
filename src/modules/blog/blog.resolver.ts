@@ -1,5 +1,5 @@
 import { BlogService } from "./blog.service.js";
-import { User, Post, Comment } from "./blog.model.js"
+import { User, Post, Comment } from "./blog.model.js";
 
 export default {
   Query: {
@@ -9,18 +9,36 @@ export default {
   },
 
   Mutation: {
-    createUser: (_: unknown, { name, email }: { name: string; email: string }): User =>
-      BlogService.createUser(name, email),
+    createUser: (
+      _: unknown,
+      { name, email }: { name: string; email: string }
+    ): User => BlogService.createUser(name, email),
 
     createPost: (
       _: unknown,
-      { title, content, authorId }: { title: string; content: string; authorId: string }
+      {
+        title,
+        content,
+        authorId,
+      }: { title: string; content: string; authorId: string }
     ): Post => BlogService.createPost(title, content, authorId),
 
     createComment: (
       _: unknown,
-      { text, authorId, postId }: { text: string; authorId: string; postId: string }
+      {
+        text,
+        authorId,
+        postId,
+      }: { text: string; authorId: string; postId: string }
     ): Comment => BlogService.createComment(text, authorId, postId),
+
+    updateUser: (
+      _: unknown,
+      { id, name, email }: { id: string; name?: string; email?: string }
+    ): User | null => BlogService.updateUser(id, name, email) ?? null,
+
+    deleteComment: (_: unknown, { id }: { id: string }): boolean =>
+      BlogService.deleteComment(id),
   },
 
   User: {
