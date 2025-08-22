@@ -1,5 +1,3 @@
-
-
 type User {
   id: ID!
   name: String!
@@ -43,4 +41,9 @@ type PaginatedPosts {
   totalCount: Int!
   hasNextPage: Boolean!
   hasPrevPage: Boolean!
+}
+
+type Subscription {
+  postCreated: Post!
+  commentCreated: Comment!
 }
