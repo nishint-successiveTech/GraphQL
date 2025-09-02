@@ -24,7 +24,9 @@ export const users: User[] = [
 ];
 
 export const posts: Post[] = [
-  { id: "1", title: "Hello GraphQL", content: "First post!", authorId: "1" },
+  { id: "1", title: "A Hello GraphQL", content: "First post!", authorId: "1" },
+  { id: "2", title: "B Hello GraphQL2", content: "First post2!", authorId: "2" },
+  { id: "3", title: "C Hello GraphQL3", content: "First post3!", authorId: "3" },
 ];
 
 export const comments: Comment[] = [

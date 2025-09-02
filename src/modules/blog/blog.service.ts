@@ -1,17 +1,53 @@
 import { users, posts, comments, User, Post, Comment } from "./blog.model.js";
 
 export class BlogService {
+  //query
   static getAllUsers(): User[] {
     return users;
   }
 
-  static getAllPosts(): Post[] {
-    return posts;
+  public static async getAllPosts(): Promise<Post[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(posts), 5000);
+    });
   }
 
   static getAllComments(): Comment[] {
     return comments;
   }
+
+  public static async getPaginatedPosts(page: number, limit: number,sortOrder:string) {
+
+    let sortedPosts=[...posts];
+
+    //sort
+
+    sortedPosts.sort((a,b)=>{
+      console.log(typeof(sortOrder));
+      if(sortOrder=="ASC"){
+        return a.title.localeCompare(b.title);
+      }
+      else{
+        return b.title.localeCompare(a.title);
+      }
+    })
+
+    //paginations
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const items = sortedPosts.slice(start, end);
+    const totalCount = sortedPosts.length;
+
+    return {
+      items,
+      totalCount,
+      hasNextPage: end < totalCount,
+      hasPrevPage: start > 0,
+    };
+  }
+
+  //mutations
 
   static createUser(name: string, email: string): User {
     const newUser: User = { id: String(users.length + 1), name, email };
@@ -30,7 +66,11 @@ export class BlogService {
     return newPost;
   }
 
-  static createComment(text: string, authorId: string, postId: string): Comment {
+  static createComment(
+    text: string,
+    authorId: string,
+    postId: string
+  ): Comment {
     const newComment: Comment = {
       id: String(comments.length + 1),
       text,
@@ -40,7 +80,32 @@ export class BlogService {
     comments.push(newComment);
     return newComment;
   }
-  
+
+  static updateUser(
+    id: string,
+    name?: string,
+    email?: string
+  ): User | undefined {
+    const user = users.find((u) => u.id === id);
+    if (!user) return undefined;
+
+    if (name !== undefined) user.name = name;
+
+    if (email != undefined) user.email = email;
+    return user;
+  }
+
+  static deleteComment(id: string): boolean {
+    const index = comments.findIndex((c) => c.id === id);
+    if (index == -1) {
+      return false;
+    }
+    comments.splice(index, 1);
+    return true;
+  }
+
+  //nestedOne
+
   static getUserPosts(userId: string): Post[] {
     return posts.filter((p) => p.authorId === userId);
   }

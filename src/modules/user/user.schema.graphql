@@ -3,12 +3,14 @@ type User {
   name: String!
   email: String!
 }
-
-extend type Query {
-  user(id: ID!): User
-  users: [User!]!
+type UserError {
+  message: String!
+  code: String!
+}
+type Query {
+  usersAll: [User!]!
+  userById(id: ID!): UserResult
 }
 
-extend type Mutation {
-  createUser(name: String!, email: String!): User!
-}
+
+union UserResult = User | UserError

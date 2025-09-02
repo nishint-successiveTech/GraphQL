@@ -6,7 +6,7 @@ async function startServer() {
     schema
   });
 
-  const { url } = await server.listen(4000);
+  const { url } = await server.listen(9090);
   console.log(`🚀 Server ready at ${url}`);
 }
 
