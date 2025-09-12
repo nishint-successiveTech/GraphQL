@@ -1,5 +1,6 @@
 import { BlogService } from "./blog.service.js";
-import { User, Post, Comment } from "./blog.model.js";
+import { User, Post, Comment, comments } from "./blog.model.js";
+import { pubsub } from "./pubsub.js";
 
 export default {
   Query: {
@@ -8,9 +9,13 @@ export default {
     comments: () => BlogService.getAllComments(),
     postsPaginated: async (
       _: unknown,
-      { page, limit,sortOrder}: { page: number; limit: number; sortOrder:string}
+      {
+        page,
+        limit,
+        sortOrder,
+      }: { page: number; limit: number; sortOrder: string }
     ) => {
-      return await BlogService.getPaginatedPosts(page, limit,sortOrder);
+      return await BlogService.getPaginatedPosts(page, limit, sortOrder);
     },
   },
 
@@ -27,7 +32,13 @@ export default {
         content,
         authorId,
       }: { title: string; content: string; authorId: string }
-    ): Post => BlogService.createPost(title, content, authorId),
+    ): Post => {
+      const post = BlogService.createPost(title, content, authorId);
+      console.log(post);
+      
+      pubsub.publish("POST_CREATED", { postCreated: post });
+      return post;
+    },
 
     createComment: (
       _: unknown,
@@ -36,7 +47,11 @@ export default {
         authorId,
         postId,
       }: { text: string; authorId: string; postId: string }
-    ): Comment => BlogService.createComment(text, authorId, postId),
+    ): Comment => {
+      const newComment = BlogService.createComment(text, authorId, postId);
+      pubsub.publish("COMMENT_CREATED", { commentCreated: newComment });
+      return newComment;
+    },
 
     updateUser: (
       _: unknown,
@@ -61,4 +76,20 @@ export default {
     author: (parent: Comment) => BlogService.getCommentAuthor(parent),
     post: (parent: Comment) => BlogService.getCommentPost(parent),
   },
+  
+  Subscription: {
+    postCreated: {
+      subscribe: () => {
+        return pubsub.asyncIterableIterator(["POST_CREATED"]);
+      },
+    },
+    commentCreated: {
+      subscribe: () => {
+       return pubsub.asyncIterableIterator(["COMMENT_CREATED"]);
+      },
+    },
+  },
 };
+
+
+
